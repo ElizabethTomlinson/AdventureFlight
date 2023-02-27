@@ -1,0 +1,9 @@
+//
+// Created by elizabeth on 2/26/23.
+//
+
+#ifndef ADVENTUREFLIGHT_CONSTANTS_H
+#define ADVENTUREFLIGHT_CONSTANTS_H
+
+static constexpr double DEFAULT_FUEL_GENERATION_RATE = .1;
+#endif //ADVENTUREFLIGHT_CONSTANTS_H
