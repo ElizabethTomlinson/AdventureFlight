@@ -32,8 +32,7 @@ std::string GameManager::readNextCommand() {
 }
 
 /**
- * @TODO: Don't have this nastyness here
- * @param cmd
+ * @TODO: Don't have this nastiness here. Implement better state machine.
  */
 std::string GameManager::updateGameState() {
     std::string cmd = readNextCommand();
@@ -46,8 +45,13 @@ std::string GameManager::updateGameState() {
     } else if (next_action == LOAD) {
         this->load(cmd);
         next_action = MAIN;
+    } else if (next_action == REMOVE_FUEL) {
+        double amount = std::stod(cmd);
+        this->game->removeFuel(amount);
+        printCurrentFuel();
+        next_action = MAIN;
     } else if (cmd == "get fuel") {
-        std::cout << "current Fuel: " << game->getCurrentFuel() << std::endl;
+        printCurrentFuel();
         next_action = MAIN;
     } else if (cmd == "add aircraft") {
         this->next_action = ADD_AIRCRAFT;
@@ -64,9 +68,13 @@ std::string GameManager::updateGameState() {
         next_action = SAVE;
     } else if (cmd == "load") {
         next_action = LOAD;
+    } else if (cmd == "remove fuel") {
+        next_action = REMOVE_FUEL;
     }
     return cmd;
 }
+
+void GameManager::printCurrentFuel() { std::cout << "Current Fuel: " << game->getCurrentFuel() << std::endl; }
 
 void GameManager::printStateOutput() {
     if (next_action == START) {
@@ -87,6 +95,8 @@ void GameManager::printStateOutput() {
         std::cout << this->game->getCurrentFuel() << std::endl;
         std::cout << this->game->printAircraft() << std::endl;
         next_action = MAIN;
+    } else if (next_action == REMOVE_FUEL) {
+        std::cout << "Enter the amount to remove" << std::endl;
     } else {
         next_action = MAIN;
     }

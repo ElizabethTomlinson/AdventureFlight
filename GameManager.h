@@ -17,7 +17,8 @@ class GameManager {
         MAIN,
         AIRCRAFT_CONFIRMATION,
         SAVE,
-        LOAD
+        LOAD,
+        REMOVE_FUEL
     };
 public:
     GameManager() : game(nullptr), next_action(START) {};
@@ -41,6 +42,8 @@ public:
 private:
     Action next_action;
     AdventureFlightGame *game;
+
+    void printCurrentFuel();
 };
 
 #endif //ADVENTUREFLIGHT_GAMEMANAGER_H
