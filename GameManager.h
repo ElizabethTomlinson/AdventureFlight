@@ -37,11 +37,14 @@ public:
 
     void save(const std::filesystem::path &path);
 
+    void save();
+
     void load(const std::filesystem::path &path);
 
 private:
     Action next_action;
     AdventureFlightGame *game;
+    std::filesystem::path path;
 
     void printCurrentFuel();
 };

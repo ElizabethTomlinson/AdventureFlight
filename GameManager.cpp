@@ -38,6 +38,7 @@ std::string GameManager::updateGameState() {
     std::string cmd = readNextCommand();
     if (this->next_action == ADD_AIRCRAFT) {
         this->game->addAircraft(Aircraft(cmd));
+        this->save();
         next_action = AIRCRAFT_CONFIRMATION;
     } else if (next_action == SAVE) {
         this->save(cmd);
@@ -48,6 +49,7 @@ std::string GameManager::updateGameState() {
     } else if (next_action == REMOVE_FUEL) {
         double amount = std::stod(cmd);
         this->game->removeFuel(amount);
+        this->save();
         printCurrentFuel();
         next_action = MAIN;
     } else if (cmd == "get fuel") {
@@ -103,6 +105,7 @@ void GameManager::printStateOutput() {
 }
 
 void GameManager::save(const std::filesystem::path &path) {
+    this->path = path;
     std::ofstream save_file(path);
     save_file << game->printAircraft();
     save_file << game->getCurrentFuel() << std::endl;
@@ -110,7 +113,14 @@ void GameManager::save(const std::filesystem::path &path) {
     save_file.close();
 }
 
+void GameManager::save() {
+    if (!this->path.empty()) {
+        this->save(this->path);
+    }
+}
+
 void GameManager::load(const std::filesystem::path &path) {
+    this->path = path;
     std::ifstream save_file(path);
     std::string line;
     bool aircraft = false;
