@@ -11,11 +11,9 @@
 #include <random>
 #include <chrono>
 
-
 class CoordinateManager {
 public:
     explicit CoordinateManager(int num_options);
-
 
     std::vector<GeoCoordinate> getRandomCoords();
 

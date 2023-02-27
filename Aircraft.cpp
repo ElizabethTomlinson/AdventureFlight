@@ -6,7 +6,7 @@
 
 #include <utility>
 
-Aircraft::Aircraft(std::string name): aircraft_name(std::move(name)), fuel(0){
+Aircraft::Aircraft(std::string name) : aircraft_name(std::move(name)), fuel(0) {
 
 };
 

@@ -13,7 +13,6 @@ public:
 
     std::string name();
 
-
 private:
     float fuel;
     std::string aircraft_name;

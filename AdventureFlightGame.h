@@ -14,6 +14,7 @@
 class AdventureFlightGame {
 public:
     explicit AdventureFlightGame(AdventureFlightSettings adventure_flight_settings);
+
     AdventureFlightGame(AdventureFlightSettings adventure_flight_settings, FuelGenerator fuelGenerator, double fuel);
 
     void addAircraft(Aircraft ac);

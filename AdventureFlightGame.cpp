@@ -28,7 +28,7 @@ std::string AdventureFlightGame::printAircraft() {
     if (this->aircraft.empty()) {
         return "no aircraft added\n";
     }
-    return_val +=  "Current Aircraft: \n";
+    return_val += "Current Aircraft: \n";
     for (auto ac: this->aircraft) {
         return_val += ac.name() + "\n";
     }

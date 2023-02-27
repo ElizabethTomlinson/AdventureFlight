@@ -5,7 +5,6 @@
 #ifndef ADVENTUREFLIGHT_FUELGENERATOR_H
 #define ADVENTUREFLIGHT_FUELGENERATOR_H
 
-
 #include <chrono>
 #include "Constants.h"
 

@@ -21,7 +21,9 @@ class GameManager {
     };
 public:
     GameManager() : game(nullptr), next_action(START) {};
+
     ~GameManager();
+
     void startNewGame();
 
     void runGame();
@@ -32,15 +34,13 @@ public:
 
     static std::string readNextCommand();
 
-    void save(const std::filesystem::path& path);
-    void load(const std::filesystem::path& path);
+    void save(const std::filesystem::path &path);
+
+    void load(const std::filesystem::path &path);
 
 private:
     Action next_action;
     AdventureFlightGame *game;
-
-
 };
-
 
 #endif //ADVENTUREFLIGHT_GAMEMANAGER_H
