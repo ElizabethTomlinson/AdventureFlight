@@ -18,7 +18,7 @@ public:
 
     AdventureFlightGame(
             AdventureFlightSettings adventure_flight_settings,
-            FuelGenerator fuelGenerator,
+            FuelGenerator fuel_generator,
             double fuel,
             GeoCoordinate input_coords);
 
@@ -40,7 +40,7 @@ private:
     std::vector<Aircraft> aircraft;
     AdventureFlightSettings settings;
     double fuel;
-    FuelGenerator fuelGenerator;
+    FuelGenerator fuel_generator;
     GeoCoordinate coords;
 };
 

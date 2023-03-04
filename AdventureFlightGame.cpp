@@ -9,16 +9,17 @@
 AdventureFlightGame::AdventureFlightGame(
         AdventureFlightSettings adventure_flight_settings,
         GeoCoordinate input_coordinates) :
-        settings((adventure_flight_settings)), fuelGenerator(FuelGenerator()), coords(input_coordinates) {
+        settings((adventure_flight_settings)), fuel_generator(FuelGenerator()), coords(input_coordinates) {
+    this->fuel = settings.getStartingFuel();
 }
 
 AdventureFlightGame::AdventureFlightGame(
         AdventureFlightSettings adventure_flight_settings,
-        FuelGenerator fuelGenerator,
+        FuelGenerator fuel_generator,
         double fuel,
         GeoCoordinate input_coordinates) :
         settings(adventure_flight_settings),
-        fuelGenerator(fuelGenerator),
+        fuel_generator(fuel_generator),
         fuel(fuel),
         coords(input_coordinates) {
 
@@ -44,7 +45,7 @@ std::string AdventureFlightGame::printAircraft() {
 }
 
 double AdventureFlightGame::getCurrentFuel() {
-    this->fuel += fuelGenerator.emptyReserves();
+    this->fuel += fuel_generator.emptyReserves();
     return this->fuel;
 }
 

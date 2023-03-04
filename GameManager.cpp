@@ -48,6 +48,11 @@ std::string GameManager::readNextCommand() {
  * @TODO: Don't have this nastiness here. Implement better state machine.
  */
 std::string GameManager::updateGameState() {
+    if (this->next_action == CONTINUE) {
+        this->next_action = MAIN;
+        std::cout << std::endl;
+        return "continue";
+    }
     std::string cmd = readNextCommand();
     if (cmd == "start") {
         startNewGame();
@@ -74,7 +79,7 @@ std::string GameManager::updateGameState() {
         this->game->addFuel(amount);
         this->save();
         printCurrentFuel();
-        next_action = MAIN;
+        next_action = CONTINUE;
     } else if (cmd == "get fuel") {
         printCurrentFuel();
         next_action = MAIN;
@@ -88,7 +93,7 @@ std::string GameManager::updateGameState() {
         for (auto coord: coords) {
             std::cout << coord.latitude() << " " << coord.longitude() << std::endl;
         }
-        next_action = MAIN;
+        next_action = CONTINUE;
     } else if (cmd == "save") {
         next_action = SAVE;
     } else if (cmd == "load") {
@@ -112,14 +117,14 @@ void GameManager::printStateOutput() {
         std::cout << "Please Enter Command:" << std::endl;
     } else if (next_action == AIRCRAFT_CONFIRMATION) {
         std::cout << game->printAircraft();
-        next_action = MAIN;
+        next_action = CONTINUE;
     } else if (next_action == SAVE) {
         std::cout << "Enter file name" << std::endl;
     } else if (next_action == LOAD) {
         std::cout << "Please enter file name" << std::endl;
     } else if (next_action == STATUS) {
         std::cout << this->game->getGameStatus();
-        next_action = MAIN;
+        next_action = CONTINUE;
     } else if (next_action == REMOVE_FUEL) {
         std::cout << "Enter the amount to remove" << std::endl;
     } else if (next_action == ADD_FUEL) {

@@ -19,7 +19,8 @@ class GameManager {
         SAVE,
         LOAD,
         REMOVE_FUEL,
-        ADD_FUEL
+        ADD_FUEL,
+        CONTINUE
     };
 public:
     GameManager() : game(nullptr), next_action(START) {};
