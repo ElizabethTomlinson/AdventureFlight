@@ -8,14 +8,16 @@
 
 class GeoCoordinate {
 public:
-    GeoCoordinate(float lat, float lon);
+    GeoCoordinate() : lat(0.0), lon(0.0) {};
 
-    double latitude() const;
+    GeoCoordinate(double lat, double lon);
 
-    double longitude() const;
+    [[nodiscard]] double latitude() const;
+
+    [[nodiscard]] double longitude() const;
 
 private:
-    GeoCoordinate() : lat(0.0), lon(0.0) {};
+
     double lat, lon;
 };
 

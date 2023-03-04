@@ -18,7 +18,8 @@ class GameManager {
         AIRCRAFT_CONFIRMATION,
         SAVE,
         LOAD,
-        REMOVE_FUEL
+        REMOVE_FUEL,
+        ADD_FUEL
     };
 public:
     GameManager() : game(nullptr), next_action(START) {};

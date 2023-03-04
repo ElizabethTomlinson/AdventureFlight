@@ -10,14 +10,19 @@
 #include "Aircraft.h"
 #include "AdventureFlightSettings.h"
 #include "FuelGenerator.h"
+#include "GeoCoordinate.h"
 
 class AdventureFlightGame {
 public:
-    explicit AdventureFlightGame(AdventureFlightSettings adventure_flight_settings);
+    explicit AdventureFlightGame(AdventureFlightSettings adventure_flight_settings, GeoCoordinate input_coords);
 
-    AdventureFlightGame(AdventureFlightSettings adventure_flight_settings, FuelGenerator fuelGenerator, double fuel);
+    AdventureFlightGame(
+            AdventureFlightSettings adventure_flight_settings,
+            FuelGenerator fuelGenerator,
+            double fuel,
+            GeoCoordinate input_coords);
 
-    void addAircraft(Aircraft ac);
+    void addAircraft(const Aircraft &ac);
 
     std::string printAircraft();
 
@@ -27,11 +32,16 @@ public:
 
     void addFuel(double amount);
 
+    std::string getGameStatus();
+
+    std::string outputBareCoords();
+
 private:
     std::vector<Aircraft> aircraft;
     AdventureFlightSettings settings;
     double fuel;
     FuelGenerator fuelGenerator;
+    GeoCoordinate coords;
 };
 
 

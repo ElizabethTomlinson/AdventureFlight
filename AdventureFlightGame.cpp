@@ -3,21 +3,28 @@
 //
 
 #include <iostream>
+#include <sstream>
 #include "AdventureFlightGame.h"
 
-AdventureFlightGame::AdventureFlightGame(AdventureFlightSettings adventure_flight_settings) :
-        settings((adventure_flight_settings)), fuelGenerator(FuelGenerator()) {
+AdventureFlightGame::AdventureFlightGame(
+        AdventureFlightSettings adventure_flight_settings,
+        GeoCoordinate input_coordinates) :
+        settings((adventure_flight_settings)), fuelGenerator(FuelGenerator()), coords(input_coordinates) {
 }
 
-AdventureFlightGame::AdventureFlightGame(AdventureFlightSettings adventure_flight_settings, FuelGenerator fuelGenerator,
-                                         double fuel) :
+AdventureFlightGame::AdventureFlightGame(
+        AdventureFlightSettings adventure_flight_settings,
+        FuelGenerator fuelGenerator,
+        double fuel,
+        GeoCoordinate input_coordinates) :
         settings(adventure_flight_settings),
         fuelGenerator(fuelGenerator),
-        fuel(fuel) {
+        fuel(fuel),
+        coords(input_coordinates) {
 
 }
 
-void AdventureFlightGame::addAircraft(Aircraft ac) {
+void AdventureFlightGame::addAircraft(const Aircraft &ac) {
     if (this->aircraft.size() < settings.getNumberOfAircraft()) {
         this->aircraft.push_back(ac);
     }
@@ -52,6 +59,22 @@ void AdventureFlightGame::removeFuel(double amount) {
 
 void AdventureFlightGame::addFuel(double amount) {
     this->fuel += amount;
+}
+
+std::string AdventureFlightGame::getGameStatus() {
+    std::stringstream buf;
+    buf << "Current Fuel is" << std::endl;
+    buf << this->getCurrentFuel() << std::endl;
+    buf << this->printAircraft() << std::endl;
+    buf << "Goal Coordinates are: " << std::endl;
+    buf << this->coords.latitude() << " " << this->coords.longitude() << std::endl;
+    return buf.str();
+}
+
+std::string AdventureFlightGame::outputBareCoords() {
+    std::stringstream buf;
+    buf << this->coords.latitude() << " " << this->coords.longitude() << std::endl;
+    return buf.str();
 }
 
 
