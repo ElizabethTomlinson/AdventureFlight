@@ -18,7 +18,7 @@ void GameManager::startNewGame() {
         std::cout << i + 1 << ": " << coords[i].latitude() << " " << coords[i].longitude() << std::endl;
     }
     std::string cmd;
-    while (this->game == nullptr && cmd != "exit") {
+    while (!this->game && cmd != "exit") {
         cmd = readNextCommand();
         if (cmd != "exit") {
             int num = std::stoi(cmd);
