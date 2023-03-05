@@ -22,7 +22,10 @@ void GameManager::startNewGame() {
         cmd = readNextCommand();
         if (cmd != "exit") {
             int num = std::stoi(cmd);
-            this->game = new AdventureFlightGame(AdventureFlightSettings(5, 5000), coords.at(num - 1));
+            this->game = new AdventureFlightGame(AdventureFlightSettings(
+                                                         AIRCRAFT_NUM,
+                                                         DEFAULT_INITIAL_FUEL),
+                                                 coords.at(num - 1));
             this->next_action = STATUS;
         } else {
             exit(0);
