@@ -48,7 +48,7 @@ std::string GameManager::readNextCommand() {
 }
 
 /**
- * @TODO: Don't have this nastiness here. Implement better state machine.
+ * @TODO: Clean this up some more.
  */
 std::string GameManager::updateGameState() {
     if (this->next_action == CONTINUE) {
@@ -61,50 +61,10 @@ std::string GameManager::updateGameState() {
         startNewGame();
     } else if (this->game == nullptr) {
         this->next_action = START;
-    } else if (this->next_action == ADD_AIRCRAFT) {
-        this->game->addAircraft(Aircraft(cmd));
-        this->save();
-        next_action = AIRCRAFT_CONFIRMATION;
-    } else if (next_action == SAVE) {
-        this->save(cmd);
-        next_action = MAIN;
-    } else if (next_action == LOAD) {
-        this->load(cmd);
-        next_action = MAIN;
-    } else if (next_action == REMOVE_FUEL) {
-        double amount = std::stod(cmd);
-        this->game->removeFuel(amount);
-        this->save();
-        printCurrentFuel();
-        next_action = MAIN;
-    } else if (next_action == ADD_FUEL) {
-        double amount = std::stod(cmd);
-        this->game->addFuel(amount);
-        this->save();
-        printCurrentFuel();
-        next_action = CONTINUE;
-    } else if (cmd == "get fuel") {
-        printCurrentFuel();
-        next_action = MAIN;
-    } else if (cmd == "add aircraft") {
-        this->next_action = ADD_AIRCRAFT;
-    } else if (cmd == "status") {
-        next_action = STATUS;
-    } else if (cmd == "get coords") {
-        auto coord_manager = CoordinateManager(3);
-        auto coords = coord_manager.getRandomCoords();
-        for (auto coord: coords) {
-            std::cout << coord.latitude() << " " << coord.longitude() << std::endl;
-        }
-        next_action = CONTINUE;
-    } else if (cmd == "save") {
-        next_action = SAVE;
-    } else if (cmd == "load") {
-        next_action = LOAD;
-    } else if (cmd == "remove fuel") {
-        next_action = REMOVE_FUEL;
-    } else if (cmd == "add fuel") {
-        next_action = ADD_FUEL;
+    } else if (processNextAction(cmd).first) {
+        return cmd;
+    } else if (processCommand(cmd)) {
+        return cmd;
     }
     return cmd;
 }
@@ -129,7 +89,7 @@ void GameManager::printStateOutput() {
         std::cout << this->game->getGameStatus();
         next_action = CONTINUE;
     } else if (next_action == REMOVE_FUEL) {
-        std::cout << "Enter the amount to remove" << std::endl;
+        std::cout << "Enter the amount to remove. Current fuel: " << this->game->getCurrentFuel() << std::endl;
     } else if (next_action == ADD_FUEL) {
         std::cout << "Enter the amount to add" << std::endl;
     } else {
@@ -206,4 +166,79 @@ void GameManager::load(const std::filesystem::path &path) {
 
 GameManager::~GameManager() {
     delete this->game;
+}
+
+std::pair<bool, std::string> GameManager::processNextAction(const std::string &cmd) {
+    bool processed = false;
+    if (this->next_action == ADD_AIRCRAFT) {
+        this->game->addAircraft(Aircraft(cmd));
+        this->save();
+        next_action = AIRCRAFT_CONFIRMATION;
+        processed = true;
+    } else if (next_action == SAVE) {
+        this->save(cmd);
+        next_action = MAIN;
+        processed = true;
+    } else if (next_action == LOAD) {
+        this->load(cmd);
+        next_action = MAIN;
+        processed = true;
+    } else if (next_action == REMOVE_FUEL) {
+        double amount = std::stod(cmd);
+        this->game->removeFuel(amount);
+        this->save();
+        printCurrentFuel();
+        next_action = MAIN;
+        processed = true;
+    } else if (next_action == ADD_FUEL) {
+        double amount = std::stod(cmd);
+        this->game->addFuel(amount);
+        this->save();
+        printCurrentFuel();
+        next_action = CONTINUE;
+        processed = true;
+    }
+    return {processed, cmd};
+}
+
+bool GameManager::processCommand(const std::string &cmd) {
+    if (cmd == "get fuel") {
+        printCurrentFuel();
+        next_action = MAIN;
+        return true;
+    }
+    if (cmd == "add aircraft") {
+        this->next_action = ADD_AIRCRAFT;
+        return true;
+    }
+    if (cmd == "status") {
+        next_action = STATUS;
+        return true;
+    }
+    if (cmd == "get coords") {
+        auto coord_manager = CoordinateManager(3);
+        auto coords = coord_manager.getRandomCoords();
+        for (auto coord: coords) {
+            std::cout << coord.latitude() << " " << coord.longitude() << std::endl;
+        }
+        next_action = CONTINUE;
+        return true;
+    }
+    if (cmd == "save") {
+        next_action = SAVE;
+        return true;
+    }
+    if (cmd == "load") {
+        next_action = LOAD;
+        return true;
+    }
+    if (cmd == "remove fuel") {
+        next_action = REMOVE_FUEL;
+        return true;
+    }
+    if (cmd == "add fuel") {
+        next_action = ADD_FUEL;
+        return true;
+    }
+    return false;
 }

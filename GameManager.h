@@ -49,6 +49,8 @@ private:
     std::filesystem::path path;
 
     void printCurrentFuel();
+    std::pair<bool, std::string> processNextAction(const std::string& cmd);
+    bool processCommand(const std::string& cmd);
 };
 
 #endif //ADVENTUREFLIGHT_GAMEMANAGER_H
