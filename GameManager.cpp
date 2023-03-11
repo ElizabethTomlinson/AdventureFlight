@@ -10,16 +10,20 @@
 
 void GameManager::startNewGame() {
     delete this->game;
-
-    auto coord_manager = CoordinateManager(3);
-    auto coords = coord_manager.getRandomCoords();
-    std::cout << "Choose the coordinates:" << std::endl;
-    for (int i = 0; i < coords.size(); ++i) {
-        std::cout << i + 1 << ": " << coords[i].latitude() << " " << coords[i].longitude() << std::endl;
-    }
     std::string cmd;
     while (!this->game && cmd != "exit") {
+        auto coord_manager = CoordinateManager(3);
+        auto coords = coord_manager.getRandomCoords();
+        std::cout << "Choose the coordinates:" << std::endl;
+        for (int i = 0; i < coords.size(); ++i) {
+            std::cout << i + 1 << ": " << coords[i].latitude() << " " << coords[i].longitude() << std::endl;
+        }
+
         cmd = readNextCommand();
+        if (cmd == "none") {
+            std::cout << "Printing new coordinates..." << std::endl;
+            continue;
+        }
         if (cmd != "exit") {
             int num = std::stoi(cmd);
             this->game = new AdventureFlightGame(AdventureFlightSettings(
