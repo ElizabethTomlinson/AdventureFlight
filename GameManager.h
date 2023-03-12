@@ -8,6 +8,7 @@
 
 #include <filesystem>
 #include "AdventureFlightGame.h"
+#include <nlohmann/json.hpp>
 
 class GameManager {
     enum Action {
