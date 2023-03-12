@@ -106,7 +106,7 @@ void GameManager::save(const std::filesystem::path &path) {
     std::ofstream save_file(path);
     save_file << game->printAircraft();
     save_file << game->getCurrentFuel() << std::endl;
-    save_file << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    save_file << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) << std::endl;
     save_file << game->outputBareCoords() << std::endl;
     save_file.close();
 }
