@@ -12,7 +12,7 @@ void GameManager::startNewGame() {
     delete this->game;
     std::string cmd;
     while (!this->game && cmd != "exit") {
-        auto coord_manager = CoordinateManager(3);
+        auto coord_manager = CoordinateManager(5);
         auto coords = coord_manager.getRandomCoords();
         std::cout << "Choose the coordinates:" << std::endl;
         for (int i = 0; i < coords.size(); ++i) {
@@ -151,6 +151,7 @@ void GameManager::load(const std::filesystem::path &path) {
             double lat = std::stod(lat_string);
             double lon = std::stod(lon_string);
             coordinate = GeoCoordinate(lat, lon);
+            break;
         }
     }
     delete this->game;
