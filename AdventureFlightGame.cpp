@@ -77,6 +77,3 @@ std::string AdventureFlightGame::outputBareCoords() {
     buf << this->coords.latitude() << " " << this->coords.longitude() << std::endl;
     return buf.str();
 }
-
-
-

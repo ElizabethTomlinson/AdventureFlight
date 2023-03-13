@@ -5,6 +5,7 @@
 #ifndef ADVENTUREFLIGHT_GEOCOORDINATE_H
 #define ADVENTUREFLIGHT_GEOCOORDINATE_H
 
+#include <nlohmann/json.hpp>
 
 class GeoCoordinate {
 public:
@@ -16,6 +17,7 @@ public:
 
     [[nodiscard]] double longitude() const;
 
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(GeoCoordinate, lat, lon);
 private:
 
     double lat, lon;

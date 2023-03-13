@@ -11,9 +11,13 @@
 #include "AdventureFlightSettings.h"
 #include "FuelGenerator.h"
 #include "GeoCoordinate.h"
+#include <nlohmann/json.hpp>
+#include "JSONConverters.h"
 
 class AdventureFlightGame {
 public:
+    AdventureFlightGame() = default;
+
     explicit AdventureFlightGame(AdventureFlightSettings adventure_flight_settings, GeoCoordinate input_coords);
 
     AdventureFlightGame(
@@ -35,6 +39,13 @@ public:
     std::string getGameStatus();
 
     std::string outputBareCoords();
+
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(AdventureFlightGame,
+                                   aircraft,
+                                   settings,
+                                   fuel,
+                                   fuel_generator,
+                                   coords);
 
 private:
     std::vector<Aircraft> aircraft;

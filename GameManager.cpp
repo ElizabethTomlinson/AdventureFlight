@@ -16,7 +16,8 @@ void GameManager::startNewGame() {
         auto coords = coord_manager.getRandomCoords();
         std::cout << "Choose the coordinates:" << std::endl;
         for (int i = 0; i < coords.size(); ++i) {
-            std::cout << i + 1 << ": " << coords[i].latitude() << " " << coords[i].longitude() << std::endl;
+            std::cout << i + 1 << ": " << std::fixed << std::setprecision(8) << coords[i].latitude() << " "
+                      << coords[i].longitude() << std::endl;
         }
 
         cmd = readNextCommand();
@@ -90,7 +91,7 @@ void GameManager::printStateOutput() {
     } else if (next_action == LOAD) {
         std::cout << "Please enter file name" << std::endl;
     } else if (next_action == STATUS) {
-        std::cout << this->game->getGameStatus();
+        std::cout << std::setprecision(8) << this->game->getGameStatus();
         next_action = CONTINUE;
     } else if (next_action == REMOVE_FUEL) {
         std::cout << "Enter the amount to remove. Current fuel: " << this->game->getCurrentFuel() << std::endl;
@@ -101,14 +102,13 @@ void GameManager::printStateOutput() {
     }
 }
 
-void GameManager::save(const std::filesystem::path &path) {
-    this->path = path;
-    std::ofstream save_file(path);
-    save_file << game->printAircraft();
-    save_file << game->getCurrentFuel() << std::endl;
-    save_file << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) << std::endl;
-    save_file << game->outputBareCoords() << std::endl;
-    save_file.close();
+void GameManager::save(const std::filesystem::path &path_) {
+    nlohmann::json j = *game;
+    std::ofstream of(path_);
+    if (of.is_open()) {
+        path = path_;
+    }
+    of << j.dump(4);
 }
 
 void GameManager::save() {
@@ -117,56 +117,12 @@ void GameManager::save() {
     }
 }
 
-void GameManager::load(const std::filesystem::path &path) {
-    this->path = path;
+void GameManager::load(const std::filesystem::path &path_) {
+    this->path = path_;
     std::ifstream save_file(path);
-    std::string line;
-    bool aircraft = false;
-    bool fuel = false;
-    double fuel_val = 0;
-    bool time = false;
-    GeoCoordinate coordinate;
-    std::vector<Aircraft> aircraft_vector;
-    std::chrono::duration<int> dur{};
-    while (getline(save_file, line)) {
-        if (line == "Current Aircraft: ") {
-            continue;
-        } else if (line == "end of list") {
-            aircraft = true;
-        } else if (!aircraft) {
-            aircraft_vector.emplace_back(line);
-        } else if (!fuel) {
-            fuel_val = std::stod(line);
-            fuel = true;
-        } else if (!time) {
-            long num = std::stol(line);
-            dur = std::chrono::duration<long>(num);
-            time = true;
-        } else {
-            std::stringstream ss;
-            ss << line;
-            std::string lat_string, lon_string;
-            ss >> lat_string;
-            ss >> lon_string;
-            double lat = std::stod(lat_string);
-            double lon = std::stod(lon_string);
-            coordinate = GeoCoordinate(lat, lon);
-            break;
-        }
-    }
+    nlohmann::json loaded_game_data = nlohmann::json::parse(save_file);
     delete this->game;
-    this->game = new AdventureFlightGame(
-            AdventureFlightSettings(
-                    5,
-                    0),
-            FuelGenerator(
-                    DEFAULT_FUEL_GENERATION_RATE,
-                    std::chrono::time_point<std::chrono::system_clock>(dur)),
-            fuel_val,
-            coordinate);
-    for (const auto &ac: aircraft_vector) {
-        this->game->addAircraft(ac);
-    }
+    game = new AdventureFlightGame(loaded_game_data.get<AdventureFlightGame>());
 }
 
 GameManager::~GameManager() {
@@ -224,7 +180,8 @@ bool GameManager::processCommand(const std::string &cmd) {
         auto coord_manager = CoordinateManager(3);
         auto coords = coord_manager.getRandomCoords();
         for (auto coord: coords) {
-            std::cout << coord.latitude() << " " << coord.longitude() << std::endl;
+            std::cout << std::fixed << std::setprecision(8) << coord.latitude() << " " << coord.longitude()
+                      << std::endl;
         }
         next_action = CONTINUE;
         return true;
