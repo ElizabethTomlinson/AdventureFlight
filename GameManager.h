@@ -21,7 +21,10 @@ class GameManager {
         LOAD,
         REMOVE_FUEL,
         ADD_FUEL,
-        CONTINUE
+        CONTINUE,
+        COMPLETE_LEG,
+        START_NEW_LEG,
+        PRINT_LEGS
     };
 public:
     GameManager() : game(nullptr), next_action(START) {};
@@ -44,14 +47,25 @@ public:
 
     void load(const std::filesystem::path &path);
 
+    void loadNewGame();
+
 private:
     Action next_action;
     AdventureFlightGame *game;
     std::filesystem::path path;
+    std::string tmp_dest;
+    int tmp_dist;
 
     void printCurrentFuel();
-    std::pair<bool, std::string> processNextAction(const std::string& cmd);
-    bool processCommand(const std::string& cmd);
+
+    std::pair<bool, std::string> processNextAction(const std::string &cmd);
+
+    bool processCommand(const std::string &cmd);
+
+    void completeLeg(const std::string &cmd);
+
+
+    void startLeg(const std::string &cmd);
 };
 
 #endif //ADVENTUREFLIGHT_GAMEMANAGER_H

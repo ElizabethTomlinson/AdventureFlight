@@ -13,6 +13,7 @@
 #include "GeoCoordinate.h"
 #include <nlohmann/json.hpp>
 #include "JSONConverters.h"
+#include "TripLeg.h"
 
 class AdventureFlightGame {
 public:
@@ -40,12 +41,23 @@ public:
 
     std::string outputBareCoords();
 
+    void addNewLeg(const TripLeg &leg);
+
+    std::string getOrigin();
+
+    std::string getLastLocation();
+
+    void printLastLeg();
+
+    void printAllLegs();
+
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(AdventureFlightGame,
                                    aircraft,
                                    settings,
                                    fuel,
                                    fuel_generator,
-                                   coords);
+                                   coords,
+                                   legs);
 
 private:
     std::vector<Aircraft> aircraft;
@@ -53,6 +65,7 @@ private:
     double fuel;
     FuelGenerator fuel_generator;
     GeoCoordinate coords;
+    std::vector<TripLeg> legs;
 };
 
 

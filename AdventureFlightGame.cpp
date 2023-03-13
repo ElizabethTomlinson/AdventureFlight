@@ -77,3 +77,36 @@ std::string AdventureFlightGame::outputBareCoords() {
     buf << this->coords.latitude() << " " << this->coords.longitude() << std::endl;
     return buf.str();
 }
+
+void AdventureFlightGame::addNewLeg(const TripLeg &leg) {
+    legs.push_back(leg);
+}
+
+std::string AdventureFlightGame::getOrigin() {
+    if (legs.empty()) {
+        return ORIGIN_SEATTLE;
+    } else {
+        return legs.at(0).getFrom();
+    }
+}
+
+std::string AdventureFlightGame::getLastLocation() {
+    if (legs.empty()) {
+        return ORIGIN_SEATTLE;
+    } else {
+        return legs.at(legs.size() - 1).getTo();
+    }
+}
+
+void AdventureFlightGame::printLastLeg() {
+    if (!legs.empty()) {
+        legs.at(legs.size() - 1).printLeg(legs.size());
+    }
+}
+
+void AdventureFlightGame::printAllLegs() {
+    TripLeg::printHeader();
+    for (int i = 0; i < legs.size(); ++i) {
+        legs.at(i).printLeg(i + 1);
+    }
+}

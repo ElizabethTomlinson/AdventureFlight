@@ -64,6 +64,8 @@ std::string GameManager::updateGameState() {
     std::string cmd = readNextCommand();
     if (cmd == "start") {
         startNewGame();
+    } else if (cmd == "load") {
+        loadNewGame();
     } else if (this->game == nullptr) {
         this->next_action = START;
     } else if (processNextAction(cmd).first) {
@@ -97,6 +99,13 @@ void GameManager::printStateOutput() {
         std::cout << "Enter the amount to remove. Current fuel: " << this->game->getCurrentFuel() << std::endl;
     } else if (next_action == ADD_FUEL) {
         std::cout << "Enter the amount to add" << std::endl;
+    } else if (next_action == COMPLETE_LEG) {
+        std::cout << "Enter Destination: (Planned Destination: " << tmp_dest << ")" << std::endl;
+    } else if (next_action == PRINT_LEGS) {
+        game->printAllLegs();
+        next_action = CONTINUE;
+    } else if (next_action == START_NEW_LEG) {
+        std::cout << "Enter Planned Destination" << std::endl;
     } else {
         next_action = MAIN;
     }
@@ -158,8 +167,42 @@ std::pair<bool, std::string> GameManager::processNextAction(const std::string &c
         printCurrentFuel();
         next_action = CONTINUE;
         processed = true;
+    } else if (next_action == COMPLETE_LEG) {
+        completeLeg(cmd);
+        save();
+        next_action = CONTINUE;
+        processed = true;
+    } else if (next_action == START_NEW_LEG) {
+        startLeg(cmd);
+        save();
+        printCurrentFuel();
+        next_action = MAIN;
+        processed = true;
     }
     return {processed, cmd};
+}
+
+void GameManager::startLeg(const std::string &cmd) {
+    tmp_dest = cmd;
+    std::cout << "Enter planned distance: " << std::endl;
+    tmp_dist = std::stoi(readNextCommand());
+    std::cout << "Enter the amount to load. Current fuel: " << game->getCurrentFuel() << std::endl;
+    double amount = std::stod(cmd);
+    game->removeFuel(amount);
+}
+
+void GameManager::completeLeg(const std::string &cmd) {
+    const std::string &dest = cmd;
+    std::cout << "Enter Distance: (est. " << tmp_dist << ")" << std::endl;
+    int dist = std::stoi(readNextCommand());
+    std::cout << game->printAircraft();
+    std::cout << "Enter Aircraft: " << std::endl;
+    Aircraft aircraft(readNextCommand());
+    std::cout << "Enter the amount of fuel remaining" << std::endl;
+    double amount = std::stod(readNextCommand());
+    game->addFuel(amount);
+    std::string from = game->getLastLocation();
+    game->addNewLeg(TripLeg(from, dest, dist, aircraft));
 }
 
 bool GameManager::processCommand(const std::string &cmd) {
@@ -198,9 +241,37 @@ bool GameManager::processCommand(const std::string &cmd) {
         next_action = REMOVE_FUEL;
         return true;
     }
+    if (cmd == "start leg") {
+        next_action = START_NEW_LEG;
+        return true;
+    }
     if (cmd == "add fuel") {
         next_action = ADD_FUEL;
         return true;
     }
+    if (cmd == "complete leg") {
+        next_action = COMPLETE_LEG;
+        return true;
+    }
+    if (cmd == "print legs") {
+        next_action = PRINT_LEGS;
+        return true;
+    }
     return false;
+}
+
+void GameManager::loadNewGame() {
+    delete this->game;
+    std::string cmd;
+    while (!this->game && cmd != "exit") {
+        std::cout << "Enter Filename:" << std::endl;
+        cmd = readNextCommand();
+        try {
+            load(cmd);
+            next_action = STATUS;
+        } catch (...) {
+            std::cout << "Could not load game" << std::endl;
+        }
+
+    }
 }
