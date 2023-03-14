@@ -5,14 +5,19 @@
 #ifndef ADVENTUREFLIGHT_AIRCRAFT_H
 #define ADVENTUREFLIGHT_AIRCRAFT_H
 
-#import <string>
+#include <string>
+#include <nlohmann/json.hpp>
 
 class Aircraft {
 public:
+    Aircraft() = default;
     explicit Aircraft(std::string name);
+
+    Aircraft(const Aircraft &) = default;
 
     std::string name();
 
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Aircraft, aircraft_name, fuel);
 private:
     float fuel;
     std::string aircraft_name;

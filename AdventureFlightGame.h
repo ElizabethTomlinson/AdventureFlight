@@ -11,9 +11,14 @@
 #include "AdventureFlightSettings.h"
 #include "FuelGenerator.h"
 #include "GeoCoordinate.h"
+#include <nlohmann/json.hpp>
+#include "JSONConverters.h"
+#include "TripLeg.h"
 
 class AdventureFlightGame {
 public:
+    AdventureFlightGame() = default;
+
     explicit AdventureFlightGame(AdventureFlightSettings adventure_flight_settings, GeoCoordinate input_coords);
 
     AdventureFlightGame(
@@ -36,12 +41,31 @@ public:
 
     std::string outputBareCoords();
 
+    void addNewLeg(const TripLeg &leg);
+
+    std::string getOrigin();
+
+    std::string getLastLocation();
+
+    void printLastLeg();
+
+    void printAllLegs();
+
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(AdventureFlightGame,
+                                   aircraft,
+                                   settings,
+                                   fuel,
+                                   fuel_generator,
+                                   coords,
+                                   legs);
+
 private:
     std::vector<Aircraft> aircraft;
     AdventureFlightSettings settings;
     double fuel;
     FuelGenerator fuel_generator;
     GeoCoordinate coords;
+    std::vector<TripLeg> legs;
 };
 
 
