@@ -187,7 +187,7 @@ void GameManager::startLeg(const std::string &cmd) {
     std::cout << "Enter planned distance: " << std::endl;
     tmp_dist = std::stoi(readNextCommand());
     std::cout << "Enter the amount to load. Current fuel: " << game->getCurrentFuel() << std::endl;
-    double amount = std::stod(cmd);
+    double amount = std::stod(readNextCommand());
     game->removeFuel(amount);
 }
 
